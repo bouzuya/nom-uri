@@ -1,0 +1,7 @@
+[package]
+name = "nom-uri"
+edition = "2024"
+publish = false
+
+[dependencies]
+nom = "8.0.0"
