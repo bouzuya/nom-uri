@@ -1,4 +1,4 @@
-use nom::{AsChar, IResult, Parser};
+use nom::{IResult, Parser};
 
 /// pct-encoded = "%" HEXDIG HEXDIG
 ///
@@ -6,8 +6,8 @@ use nom::{AsChar, IResult, Parser};
 pub fn pct_encoded(input: &str) -> IResult<&str, String> {
     (
         nom::character::char('%'),
-        nom::character::satisfy(|c| c.is_hex_digit()),
-        nom::character::satisfy(|c| c.is_hex_digit()),
+        nom::character::satisfy(|c| c.is_ascii_hexdigit()),
+        nom::character::satisfy(|c| c.is_ascii_hexdigit()),
     )
         .map(|(_, first, second)| format!("%{}{}", first, second))
         .parse(input)
