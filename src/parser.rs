@@ -4,6 +4,11 @@ mod scheme;
 mod sub_delims;
 mod unreserved;
 
+pub(self) use nom::{IResult, Parser};
+use nom_locate::LocatedSpan;
+
+pub(self) type Span<'a> = LocatedSpan<&'a str>;
+
 pub use self::pchar::pchar;
 pub use self::pct_encoded::pct_encoded;
 pub use self::scheme::scheme;
