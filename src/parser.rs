@@ -1,3 +1,4 @@
+mod path_noscheme;
 mod path_rootless;
 mod pchar;
 mod pct_encoded;
@@ -20,6 +21,7 @@ pub use self::pct_encoded::pct_encoded;
 pub use self::scheme::scheme;
 pub use self::segment::segment;
 pub use self::segment_nz::segment_nz;
+pub use self::segment_nz_nc::segment_nz_nc;
 pub use self::sub_delims::sub_delims;
 pub use self::unreserved::unreserved;
 
