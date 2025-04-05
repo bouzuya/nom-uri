@@ -24,10 +24,10 @@ pub fn pchar(i: Span) -> IResult<Span, Token> {
         unreserved.map(|t| Token { span: t.span() }),
         pct_encoded.map(|t| Token { span: t.span() }),
         sub_delims.map(|t| Token { span: t.span() }),
-        nom::character::char(':').map(|_| Token {
+        nom::character::complete::char(':').map(|_| Token {
             span: start.take(1),
         }),
-        nom::character::char('@').map(|_| Token {
+        nom::character::complete::char('@').map(|_| Token {
             span: start.take(1),
         }),
     ))

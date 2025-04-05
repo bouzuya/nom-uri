@@ -52,6 +52,9 @@ mod tests {
         ok(segment_nz_nc, "%2f", ("", "%2f"));
         ok(segment_nz_nc, "!$&'()*+,;=", ("", "!$&'()*+,;="));
         ok(segment_nz_nc, "@", ("", "@"));
+        ok(segment_nz_nc, "abc/def", ("/def", "abc"));
+        ok(segment_nz_nc, "abc?query", ("?query", "abc"));
+        ok(segment_nz_nc, "abc#fragment", ("#fragment", "abc"));
 
         err(segment_nz_nc, "");
         err(segment_nz_nc, "%g0");
