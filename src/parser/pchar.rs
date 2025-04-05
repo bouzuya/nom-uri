@@ -1,38 +1,64 @@
-use nom::{IResult, Parser};
+use nom::{IResult, Input as _, Offset as _, Parser};
 
 use crate::parser::{pct_encoded, sub_delims, unreserved};
+
+use super::{HasSpan, Span};
+
+#[derive(Debug, PartialEq)]
+pub struct Token<'a> {
+    pub span: Span<'a>,
+}
+
+impl<'a> HasSpan<'a> for Token<'a> {
+    fn span(&self) -> Span<'a> {
+        self.span
+    }
+}
 
 /// pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
 ///
 /// <https://datatracker.ietf.org/doc/html/rfc3986#section-3.3>
-pub fn pchar(input: &str) -> IResult<&str, String> {
-    nom::branch::alt((
-        unreserved.map(|c| c.to_string()),
-        pct_encoded,
-        sub_delims.map(|c| c.to_string()),
-        nom::character::char(':').map(|c| c.to_string()),
-        nom::character::char('@').map(|c| c.to_string()),
+pub fn pchar(i: Span) -> IResult<Span, Token> {
+    let start = i;
+    let (i, _) = nom::branch::alt((
+        unreserved.map(|t| Token { span: t.span() }),
+        pct_encoded.map(|t| Token { span: t.span() }),
+        sub_delims.map(|t| Token { span: t.span() }),
+        nom::character::char(':').map(|_| Token {
+            span: start.take(1),
+        }),
+        nom::character::char('@').map(|_| Token {
+            span: start.take(1),
+        }),
     ))
-    .parse(input)
+    .parse(i)?;
+    Ok((
+        i,
+        Token {
+            span: start.take(start.offset(&i)),
+        },
+    ))
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::parser::tests::{err, ok};
+
     use super::*;
 
     #[test]
     fn test_pchar() {
-        assert_eq!(pchar("arest"), Ok(("rest", "a".to_string()))); // unreserved
-        assert_eq!(pchar("%20rest"), Ok(("rest", "%20".to_string()))); // pct-encoded
-        assert_eq!(pchar("!rest"), Ok(("rest", "!".to_string()))); // sub-delims
-        assert_eq!(pchar(":rest"), Ok(("rest", ":".to_string()))); // ":"
-        assert_eq!(pchar("@rest"), Ok(("rest", "@".to_string()))); // "@"
+        ok(pchar, "arest", ("rest", "a"));
+        ok(pchar, "%20rest", ("rest", "%20"));
+        ok(pchar, "!rest", ("rest", "!"));
+        ok(pchar, ":rest", ("rest", ":"));
+        ok(pchar, "@rest", ("rest", "@"));
 
-        assert!(pchar("%G1rest").is_err());
-        assert!(pchar("%1Grest").is_err());
-        assert!(pchar("%rest").is_err());
-        assert!(pchar("").is_err());
-        assert!(pchar("#rest").is_err());
-        assert!(pchar("/rest").is_err());
+        err(pchar, "%G1rest");
+        err(pchar, "%1Grest");
+        err(pchar, "%rest");
+        err(pchar, "");
+        err(pchar, "#rest");
+        err(pchar, "/rest");
     }
 }
