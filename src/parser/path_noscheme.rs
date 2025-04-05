@@ -37,7 +37,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_path_rootless() {
+    fn test_path_noscheme() {
         ok(path_noscheme, "abc", ("", "abc"));
         ok(path_noscheme, "123", ("", "123"));
         ok(path_noscheme, "a-b.c_d~", ("", "a-b.c_d~"));
