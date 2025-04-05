@@ -19,7 +19,7 @@ impl<'a> HasSpan<'a> for Token<'a> {
 /// <https://datatracker.ietf.org/doc/html/rfc3986#section-2.2>
 pub fn sub_delims(i: Span) -> IResult<Span, Token> {
     let start = i;
-    let (i, _) = nom::character::satisfy(|c| {
+    let (i, _) = nom::character::complete::satisfy(|c| {
         matches!(
             c,
             '!' | '$' | '&' | '\'' | '(' | ')' | '*' | '+' | ',' | ';' | '='

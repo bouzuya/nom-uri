@@ -1,6 +1,7 @@
 mod pchar;
 mod pct_encoded;
 mod scheme;
+mod segment_nz_nc;
 mod sub_delims;
 mod unreserved;
 
