@@ -1,31 +1,53 @@
-use nom::{IResult, Parser};
+use nom::{IResult, Input as _, Offset as _, Parser};
+
+use super::{HasSpan, Span};
+
+#[derive(Debug, PartialEq)]
+pub struct Token<'a> {
+    pub span: Span<'a>,
+}
+
+impl<'a> HasSpan<'a> for Token<'a> {
+    fn span(&self) -> Span<'a> {
+        self.span
+    }
+}
 
 /// unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ///
 /// <https://datatracker.ietf.org/doc/html/rfc3986#section-2.3>
-pub fn unreserved(input: &str) -> IResult<&str, char> {
-    nom::character::satisfy(|c| {
+pub fn unreserved(i: Span) -> IResult<Span, Token> {
+    let start = i;
+    let (i, _) = nom::character::satisfy(|c| {
         c.is_ascii_alphanumeric() || c == '-' || c == '.' || c == '_' || c == '~'
     })
-    .parse(input)
+    .parse(i)?;
+    Ok((
+        i,
+        Token {
+            span: start.take(start.offset(&i)),
+        },
+    ))
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::parser::tests::{err, ok};
+
     use super::*;
 
     #[test]
     fn test_unreserved() {
-        assert_eq!(unreserved("arest"), Ok(("rest", 'a')));
-        assert_eq!(unreserved("Zrest"), Ok(("rest", 'Z')));
-        assert_eq!(unreserved("9rest"), Ok(("rest", '9')));
-        assert_eq!(unreserved("-rest"), Ok(("rest", '-')));
-        assert_eq!(unreserved(".rest"), Ok(("rest", '.')));
-        assert_eq!(unreserved("_rest"), Ok(("rest", '_')));
-        assert_eq!(unreserved("~rest"), Ok(("rest", '~')));
+        ok(unreserved, "arest", ("rest", "a"));
+        ok(unreserved, "Zrest", ("rest", "Z"));
+        ok(unreserved, "9rest", ("rest", "9"));
+        ok(unreserved, "-rest", ("rest", "-"));
+        ok(unreserved, ".rest", ("rest", "."));
+        ok(unreserved, "_rest", ("rest", "_"));
+        ok(unreserved, "~rest", ("rest", "~"));
 
-        assert!(unreserved("%20rest").is_err());
-        assert!(unreserved("!rest").is_err());
-        assert!(unreserved("").is_err());
+        err(unreserved, "%20rest");
+        err(unreserved, "!rest");
+        err(unreserved, "");
     }
 }
