@@ -1,10 +1,16 @@
-use nom::{Input, Offset};
+use nom::{IResult, Input, Offset, Parser};
 
-use super::{IResult, Parser, Span};
+use super::{HasSpan, Span};
 
 #[derive(Debug, PartialEq)]
-struct Token<'a> {
+pub struct Token<'a> {
     pub span: Span<'a>,
+}
+
+impl<'a> HasSpan<'a> for Token<'a> {
+    fn span(&self) -> Span<'a> {
+        self.span
+    }
 }
 
 /// scheme      = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
@@ -27,40 +33,19 @@ pub fn scheme(i: Span) -> IResult<Span, Token> {
 
 #[cfg(test)]
 mod tests {
+    use crate::parser::tests::{err, ok};
+
     use super::*;
 
     #[test]
-    fn test_scheme() -> Result<(), ()> {
-        fn err(s: &str) {
-            use nom_locate::LocatedSpan;
+    fn test_scheme() {
+        ok(scheme, "http://", ("://", "http"));
+        ok(scheme, "ftp://", ("://", "ftp"));
+        ok(scheme, "a1+.-://", ("://", "a1+.-"));
+        ok(scheme, "a://", ("://", "a"));
 
-            let f = scheme;
-            let s = LocatedSpan::new(s);
-            assert!(f(s).is_err());
-        }
-        fn ok(s: &str, (i, o): (&str, &str)) {
-            use nom::Input;
-            use nom_locate::LocatedSpan;
-
-            let f = scheme;
-            let s = LocatedSpan::new(s);
-            assert_eq!(
-                f(s).map(|(i, o)| (i, o.span)).expect("f"),
-                (
-                    s.take_from(s.rfind(i).expect("i")),
-                    s.take_from(s.find(o).expect("o")).take(o.len())
-                )
-            );
-        }
-
-        ok("http://", ("://", "http"));
-        ok("ftp://", ("://", "ftp"));
-        ok("a1+.-://", ("://", "a1+.-"));
-        ok("a://", ("://", "a"));
-        err("1http://");
-        err("+http://");
-        err("");
-
-        Ok(())
+        err(scheme, "1http://");
+        err(scheme, "+http://");
+        err(scheme, "");
     }
 }
