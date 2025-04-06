@@ -1,3 +1,4 @@
+mod authority;
 mod dec_octet;
 mod host;
 mod ipv4address;
@@ -24,7 +25,9 @@ pub(crate) trait HasSpan<'a> {
     fn span(&self) -> Span<'a>;
 }
 
+pub use self::authority::authority;
 pub use self::dec_octet::dec_octet;
+pub use self::host::host;
 pub use self::ipv4address::ipv4address;
 pub use self::path_abempty::path_abempty;
 pub use self::path_absolute::path_absolute;

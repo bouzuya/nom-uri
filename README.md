@@ -5,3 +5,5 @@ A URI parser implemented using the [`nom`](https://crates.io/crates/nom) crate, 
 ## TODOs
 
 - [ ] IP-literal
+- [ ] userinfo
+- [ ] port
