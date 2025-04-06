@@ -1,3 +1,4 @@
+mod path;
 mod path_abempty;
 mod path_absolute;
 mod path_empty;
@@ -19,6 +20,11 @@ pub(crate) trait HasSpan<'a> {
     fn span(&self) -> Span<'a>;
 }
 
+pub use self::path_abempty::path_abempty;
+pub use self::path_absolute::path_absolute;
+pub use self::path_empty::path_empty;
+pub use self::path_noscheme::path_noscheme;
+pub use self::path_rootless::path_rootless;
 pub use self::pchar::pchar;
 pub use self::pct_encoded::pct_encoded;
 pub use self::scheme::scheme;
