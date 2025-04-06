@@ -8,6 +8,7 @@ mod path_noscheme;
 mod path_rootless;
 mod pchar;
 mod pct_encoded;
+mod reg_name;
 mod scheme;
 mod segment;
 mod segment_nz;
