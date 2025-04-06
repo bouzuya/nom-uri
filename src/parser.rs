@@ -1,4 +1,5 @@
 mod dec_octet;
+mod host;
 mod ipv4address;
 mod path;
 mod path_abempty;
@@ -24,6 +25,7 @@ pub(crate) trait HasSpan<'a> {
 }
 
 pub use self::dec_octet::dec_octet;
+pub use self::ipv4address::ipv4address;
 pub use self::path_abempty::path_abempty;
 pub use self::path_absolute::path_absolute;
 pub use self::path_empty::path_empty;
@@ -31,6 +33,7 @@ pub use self::path_noscheme::path_noscheme;
 pub use self::path_rootless::path_rootless;
 pub use self::pchar::pchar;
 pub use self::pct_encoded::pct_encoded;
+pub use self::reg_name::reg_name;
 pub use self::scheme::scheme;
 pub use self::segment::segment;
 pub use self::segment_nz::segment_nz;
