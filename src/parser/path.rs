@@ -42,7 +42,7 @@ pub fn path(i: Span) -> IResult<Span, Token> {
 
 #[cfg(test)]
 mod tests {
-    use crate::parser::tests::{err, ok};
+    use crate::parser::tests::ok;
 
     use super::*;
 
