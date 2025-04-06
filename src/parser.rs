@@ -1,3 +1,4 @@
+mod dec_octet;
 mod path;
 mod path_abempty;
 mod path_absolute;
