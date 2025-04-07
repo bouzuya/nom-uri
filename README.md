@@ -7,5 +7,4 @@ A URI parser implemented using the [`nom`](https://crates.io/crates/nom) crate, 
 - [ ] IP-literal
 - [ ] userinfo
 - [ ] port
-- [ ] query
 - [ ] fragment
