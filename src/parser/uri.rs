@@ -1,6 +1,6 @@
 use nom::{IResult, Input as _, Offset as _, Parser};
 
-use crate::parser::{hier_part, query, scheme};
+use crate::parser::{fragment, hier_part, query, scheme};
 
 use super::{HasSpan, Span};
 
@@ -25,7 +25,7 @@ pub fn uri(i: Span) -> IResult<Span, Token> {
         nom::character::complete::char(':'),
         hier_part,
         nom::combinator::opt((nom::character::complete::char('?'), query)),
-        // TODO: fragment
+        nom::combinator::opt((nom::character::complete::char('#'), fragment)),
     )
         .parse(i)?;
     Ok((
@@ -66,6 +66,16 @@ mod tests {
             uri,
             "http://example.com/path/to?q=v",
             ("", "http://example.com/path/to?q=v"),
+        );
+        ok(
+            uri,
+            "http://example.com/path/to#f",
+            ("", "http://example.com/path/to#f"),
+        );
+        ok(
+            uri,
+            "http://example.com/path/to?q=v#f",
+            ("", "http://example.com/path/to?q=v#f"),
         );
         // TODO: port
         // ok(
