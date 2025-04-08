@@ -1,7 +1,5 @@
 use nom::{IResult, Input as _, Offset as _, Parser};
 
-use crate::parser::segment;
-
 use super::{HasSpan, Span};
 
 #[derive(Debug, PartialEq)]
