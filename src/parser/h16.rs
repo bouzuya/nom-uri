@@ -20,7 +20,7 @@ impl<'a> HasSpan<'a> for Token<'a> {
 /// <https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.2>
 pub fn h16(i: Span) -> IResult<Span, Token> {
     let start = i;
-    let (i, _) = nom::multi::count(hexdig, 4).parse(i)?;
+    let (i, _) = nom::multi::many_m_n(1, 4, hexdig).parse(i)?;
     Ok((
         i,
         Token {
@@ -42,11 +42,14 @@ mod tests {
         ok(h16, "89AB", ("", "89AB"));
         ok(h16, "CDEF", ("", "CDEF"));
 
+        ok(h16, "A", ("", "A"));
+        ok(h16, "1F", ("", "1F"));
+
         ok(h16, "ABCDEF", ("EF", "ABCD"));
         ok(h16, "12345678", ("5678", "1234"));
 
         err(h16, "ffff");
-        err(h16, "12aF");
+        ok(h16, "12aF", ("aF", "12"));
 
         ok(h16, "ABCD:", (":", "ABCD"));
         ok(h16, "123Frest", ("rest", "123F"));
@@ -54,10 +57,8 @@ mod tests {
         ok(h16, "0123?query", ("?query", "0123"));
 
         err(h16, "");
-        err(h16, "ABC");
-        err(h16, "12");
         err(h16, "G123");
-        err(h16, "12G4");
+        ok(h16, "12G4", ("G4", "12"));
         err(h16, "xyz1");
         err(h16, "!@#$");
     }
