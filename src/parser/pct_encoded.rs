@@ -20,8 +20,10 @@ pub fn pct_encoded(i: Span) -> IResult<Span, Token> {
     let start = i;
     let (i, _) = (
         nom::character::complete::char('%').map(|_| ()),
-        nom::character::complete::satisfy(|c| c.is_ascii_hexdigit()).map(|_| ()),
-        nom::character::complete::satisfy(|c| c.is_ascii_hexdigit()).map(|_| ()),
+        nom::character::complete::satisfy(|c| matches!(c, '0'..='9') || matches!(c, 'A'..='F'))
+            .map(|_| ()),
+        nom::character::complete::satisfy(|c| matches!(c, '0'..='9') || matches!(c, 'A'..='F'))
+            .map(|_| ()),
     )
         .parse(i)?;
     Ok((
@@ -45,6 +47,8 @@ mod tests {
         ok(pct_encoded, "%41rest", ("rest", "%41"));
         ok(pct_encoded, "%5Arest", ("rest", "%5A"));
 
+        err(pct_encoded, "%a0");
+        err(pct_encoded, "%7e");
         err(pct_encoded, "20rest");
         err(pct_encoded, "%G1rest");
         err(pct_encoded, "%1Grest");
