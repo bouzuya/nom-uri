@@ -41,7 +41,7 @@ mod tests {
         ok(path_noscheme, "abc", ("", "abc"));
         ok(path_noscheme, "123", ("", "123"));
         ok(path_noscheme, "a-b.c_d~", ("", "a-b.c_d~"));
-        ok(path_noscheme, "%2f", ("", "%2f"));
+        ok(path_noscheme, "%2F", ("", "%2F"));
         ok(path_noscheme, "!$&'()*+,;=", ("", "!$&'()*+,;="));
         ok(path_noscheme, "@", ("", "@"));
 

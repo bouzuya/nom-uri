@@ -1,6 +1,7 @@
 use nom::{IResult, Input as _, Offset as _, Parser};
 
 use super::{HasSpan, Span};
+use crate::parser::hexdig;
 
 #[derive(Debug, PartialEq)]
 pub struct Token<'a> {
@@ -20,10 +21,8 @@ pub fn pct_encoded(i: Span) -> IResult<Span, Token> {
     let start = i;
     let (i, _) = (
         nom::character::complete::char('%').map(|_| ()),
-        nom::character::complete::satisfy(|c| matches!(c, '0'..='9') || matches!(c, 'A'..='F'))
-            .map(|_| ()),
-        nom::character::complete::satisfy(|c| matches!(c, '0'..='9') || matches!(c, 'A'..='F'))
-            .map(|_| ()),
+        hexdig.map(|_| ()),
+        hexdig.map(|_| ()),
     )
         .parse(i)?;
     Ok((

@@ -35,6 +35,7 @@ pub(crate) trait HasSpan<'a> {
 pub use self::authority::authority;
 pub use self::dec_octet::dec_octet;
 pub use self::fragment::fragment;
+pub use self::hexdig::hexdig;
 pub use self::hier_part::hier_part;
 pub use self::host::host;
 pub use self::ipv4address::ipv4address;

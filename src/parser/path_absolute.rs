@@ -45,7 +45,7 @@ mod tests {
         ok(path_absolute, "/abc", ("", "/abc"));
         ok(path_absolute, "/123", ("", "/123"));
         ok(path_absolute, "/a-b.c_d~", ("", "/a-b.c_d~"));
-        ok(path_absolute, "/%2f", ("", "/%2f"));
+        ok(path_absolute, "/%2F", ("", "/%2F"));
         ok(path_absolute, "/!$&'()*+,;=", ("", "/!$&'()*+,;="));
         ok(path_absolute, "/@", ("", "/@"));
 

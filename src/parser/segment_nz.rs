@@ -40,7 +40,7 @@ mod tests {
         ok(segment_nz, "abc", ("", "abc"));
         ok(segment_nz, "123", ("", "123"));
         ok(segment_nz, "a-b.c_d~", ("", "a-b.c_d~"));
-        ok(segment_nz, "%2f", ("", "%2f"));
+        ok(segment_nz, "%2F", ("", "%2F"));
         ok(segment_nz, "!$&'()*+,;=", ("", "!$&'()*+,;="));
         ok(segment_nz, "@", ("", "@"));
         ok(segment_nz, ":", ("", ":"));

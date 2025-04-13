@@ -48,9 +48,9 @@ mod tests {
     fn test_ipvfuture() {
         ok(ipvfuture, "v1.G", ("", "v1.G"));
         ok(ipvfuture, "vA.G", ("", "vA.G"));
-        ok(ipvfuture, "v12AF.G", ("", "v1.G"));
+        ok(ipvfuture, "v12AF.G", ("", "v12AF.G"));
 
-        ok(ipvfuture, "v1.G1-._~", ("", "v1.1-._~"));
+        ok(ipvfuture, "v1.G1-._~", ("", "v1.G1-._~"));
         ok(ipvfuture, "vF.!$&'()*+,;=", ("", "vF.!$&'()*+,;="));
         ok(ipvfuture, "vF.:", ("", "vF.:"));
     }

@@ -41,7 +41,7 @@ mod tests {
         ok(path_rootless, "abc", ("", "abc"));
         ok(path_rootless, "123", ("", "123"));
         ok(path_rootless, "a-b.c_d~", ("", "a-b.c_d~"));
-        ok(path_rootless, "%2f", ("", "%2f"));
+        ok(path_rootless, "%2F", ("", "%2F"));
         ok(path_rootless, "!$&'()*+,;=", ("", "!$&'()*+,;="));
         ok(path_rootless, "@", ("", "@"));
         ok(path_rootless, ":", ("", ":"));
