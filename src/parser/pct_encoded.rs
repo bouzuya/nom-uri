@@ -45,9 +45,9 @@ mod tests {
         ok(pct_encoded, "%7Erest", ("rest", "%7E"));
         ok(pct_encoded, "%41rest", ("rest", "%41"));
         ok(pct_encoded, "%5Arest", ("rest", "%5A"));
+        ok(pct_encoded, "%a0", ("", "%a0"));
+        ok(pct_encoded, "%7e", ("", "%7e"));
 
-        err(pct_encoded, "%a0");
-        err(pct_encoded, "%7e");
         err(pct_encoded, "20rest");
         err(pct_encoded, "%G1rest");
         err(pct_encoded, "%1Grest");

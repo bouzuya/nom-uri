@@ -45,7 +45,7 @@ mod tests {
         ok(ls32, "ABCD:1234", ("", "ABCD:1234"));
         ok(ls32, "0123:4567", ("", "0123:4567"));
         ok(ls32, "89AB:CDEF", ("", "89AB:CDEF"));
-        err(ls32, "ffff:eeee");
+        ok(ls32, "ffff:eeee", ("", "ffff:eeee"));
 
         ok(ls32, "ABCD:1234/path", ("/path", "ABCD:1234"));
         ok(ls32, "0123:4567?query", ("?query", "0123:4567"));
@@ -55,10 +55,10 @@ mod tests {
         err(ls32, "ABCD");
         err(ls32, "ABCD:");
         err(ls32, ":1234");
-        err(ls32, "ABC:1234");
-        err(ls32, "ABCD:123");
+        ok(ls32, "ABC:1234", ("", "ABC:1234"));
+        ok(ls32, "ABCD:123", ("", "ABCD:123"));
         err(ls32, "ABCG:1234");
-        err(ls32, "ABCD:123G");
+        ok(ls32, "ABCD:123G", ("G", "ABCD:123"));
         err(ls32, "ABCDE:1234");
         ok(ls32, "ABCD:12345", ("5", "ABCD:1234"));
         err(ls32, "ABCD;1234");

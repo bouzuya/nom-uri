@@ -48,12 +48,12 @@ mod tests {
         ok(h16, "ABCDEF", ("EF", "ABCD"));
         ok(h16, "12345678", ("5678", "1234"));
 
-        err(h16, "ffff");
-        ok(h16, "12aF", ("aF", "12"));
+        ok(h16, "ffff", ("", "ffff"));
+        ok(h16, "12aF", ("", "12aF"));
 
         ok(h16, "ABCD:", (":", "ABCD"));
         ok(h16, "123Frest", ("rest", "123F"));
-        err(h16, "aBcD/path");
+        ok(h16, "aBcD/path", ("/path", "aBcD"));
         ok(h16, "0123?query", ("?query", "0123"));
 
         err(h16, "");
