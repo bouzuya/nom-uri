@@ -21,9 +21,7 @@ impl<'a> HasSpan<'a> for Token<'a> {
 /// <https://datatracker.ietf.org/doc/html/rfc2234#section-6.1>
 pub fn hexdig(i: Span) -> IResult<Span, Token> {
     let start = i;
-    let (i, _) =
-        nom::character::complete::satisfy(|c| matches!(c, '0'..='9') || matches!(c, 'A'..='F'))
-            .parse(i)?;
+    let (i, _) = nom::character::complete::satisfy(|c| c.is_ascii_hexdigit()).parse(i)?;
     Ok((
         i,
         Token {
@@ -56,10 +54,15 @@ mod tests {
         ok(hexdig, "Drest", ("rest", "D"));
         ok(hexdig, "Erest", ("rest", "E"));
         ok(hexdig, "Frest", ("rest", "F"));
+        ok(hexdig, "arest", ("rest", "a"));
+        ok(hexdig, "brest", ("rest", "b"));
+        ok(hexdig, "crest", ("rest", "c"));
+        ok(hexdig, "drest", ("rest", "d"));
+        ok(hexdig, "erest", ("rest", "e"));
+        ok(hexdig, "frest", ("rest", "f"));
 
         err(hexdig, "Grest");
         err(hexdig, "grest");
-        err(hexdig, "arest");
         err(hexdig, "!rest");
         err(hexdig, "");
     }
