@@ -4,6 +4,7 @@ mod fragment;
 mod hier_part;
 mod host;
 mod ipv4address;
+mod ipvfuture;
 mod path;
 mod path_abempty;
 mod path_absolute;
