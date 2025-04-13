@@ -7,6 +7,7 @@ mod hier_part;
 mod host;
 mod ipv4address;
 mod ipvfuture;
+mod ls32;
 mod path;
 mod path_abempty;
 mod path_absolute;
@@ -36,6 +37,7 @@ pub(crate) trait HasSpan<'a> {
 pub use self::authority::authority;
 pub use self::dec_octet::dec_octet;
 pub use self::fragment::fragment;
+pub use self::h16::h16;
 pub use self::hexdig::hexdig;
 pub use self::hier_part::hier_part;
 pub use self::host::host;
