@@ -1,6 +1,7 @@
 mod authority;
 mod dec_octet;
 mod fragment;
+mod h16;
 mod hexdig;
 mod hier_part;
 mod host;
