@@ -80,11 +80,17 @@ mod tests {
         fn h2(i: Span) -> IResult<Span, Token> {
             let start = i;
             let (i, i2) = nom::bytes::take_until("::").parse(i)?;
-            let (_, _) = (
+            let (i3, _) = (
                 nom::multi::many_m_n(0, 2, (h16, nom::character::complete::char(':'))),
                 h16,
             )
                 .parse(i2)?;
+            if !i3.is_empty() {
+                return Err(nom::Err::Error(nom::error::Error::new(
+                    start,
+                    nom::error::ErrorKind::ManyMN,
+                )));
+            }
             let (i, _) = nom::bytes::complete::tag("::").parse(i)?;
             Ok((
                 i,
@@ -94,6 +100,8 @@ mod tests {
             ))
         }
 
+        err(h2, "1:2:3:4:5::");
+        err(h2, "1:2:3:4::");
         ok(h2, "1:2:3::", ("", "1:2:3::"));
         ok(h2, "1:2::", ("", "1:2::"));
         ok(h2, "1::", ("", "1::"));
