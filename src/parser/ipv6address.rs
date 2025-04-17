@@ -105,5 +105,55 @@ mod tests {
         ok(h2, "1:2:3::", ("", "1:2:3::"));
         ok(h2, "1:2::", ("", "1:2::"));
         ok(h2, "1::", ("", "1::"));
+
+        struct Lookahead<F> {
+            parser: F,
+            tag: &'static str,
+        }
+
+        impl<F> Lookahead<F> {
+            fn new(parser: F, tag: &'static str) -> Self {
+                Lookahead { parser, tag }
+            }
+        }
+
+        impl<I, F> nom::Parser<I> for Lookahead<F>
+        where
+            I: Clone
+                + nom::Input
+                + nom::Compare<&'static str>
+                + nom::FindSubstring<&'static str>
+                + nom::Offset,
+            F: nom::Parser<I>,
+        {
+            type Output = I;
+
+            type Error = <F as Parser<I>>::Error;
+
+            fn parse(&mut self, input: I) -> IResult<I, Self::Output, Self::Error> {
+                use nom::error::ParseError;
+
+                let start = input.clone();
+                let (i, i2) = nom::bytes::take_until(self.tag).parse(input)?;
+                let (i3, _) = self.parser.parse(i2)?;
+                if i3.input_len() != 0 {
+                    return Err(nom::Err::Error(<F as Parser<I>>::Error::from_error_kind(
+                        start,
+                        nom::error::ErrorKind::ManyMN,
+                    )));
+                }
+                let (i, _) = nom::bytes::complete::tag(self.tag).parse(i)?;
+                Ok((i.clone(), start.take(start.offset(&i))))
+            }
+
+            fn process<OM: nom::OutputMode>(
+                &mut self,
+                _input: I,
+            ) -> nom::PResult<OM, I, Self::Output, Self::Error> {
+                unimplemented!()
+            }
+        }
+
+        // TODO: test
     }
 }
