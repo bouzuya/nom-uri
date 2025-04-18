@@ -154,6 +154,28 @@ mod tests {
             }
         }
 
-        // TODO: test
+        fn h3(i: Span) -> IResult<Span, Token> {
+            let start = i;
+            let (i, _) = Lookahead::new(
+                (
+                    nom::multi::many_m_n(0, 2, (h16, nom::character::complete::char(':'))),
+                    h16,
+                ),
+                "::",
+            )
+            .parse(i)?;
+            Ok((
+                i,
+                Token {
+                    span: start.take(start.offset(&i)),
+                },
+            ))
+        }
+
+        err(h3, "1:2:3:4:5::");
+        err(h3, "1:2:3:4::");
+        ok(h3, "1:2:3::", ("", "1:2:3::"));
+        ok(h3, "1:2::", ("", "1:2::"));
+        ok(h3, "1::", ("", "1::"));
     }
 }
