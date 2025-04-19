@@ -66,6 +66,7 @@ pub use self::segment_nz_nc::segment_nz_nc;
 pub use self::sub_delims::sub_delims;
 pub use self::unreserved::unreserved;
 pub use self::uri::uri;
+pub use self::userinfo::userinfo;
 
 #[cfg(test)]
 mod tests {
