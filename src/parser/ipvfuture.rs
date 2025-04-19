@@ -21,7 +21,7 @@ pub fn ipvfuture(i: Span) -> IResult<Span, Token> {
     let start = i;
     let (i, _) = (
         nom::character::complete::char('v'),
-        nom::multi::many1(nom::character::satisfy(|c| c.is_ascii_hexdigit())),
+        nom::multi::many1(nom::character::complete::satisfy(|c| c.is_ascii_hexdigit())),
         nom::character::complete::char('.'),
         nom::multi::many1(nom::branch::alt((
             unreserved.map(|_| ()),
@@ -53,5 +53,8 @@ mod tests {
         ok(ipvfuture, "v1.G1-._~", ("", "v1.G1-._~"));
         ok(ipvfuture, "vF.!$&'()*+,;=", ("", "vF.!$&'()*+,;="));
         ok(ipvfuture, "vF.:", ("", "vF.:"));
+
+        ok(ipvfuture, "v1.12345", ("", "v1.12345"));
+        ok(ipvfuture, "v1.G]", ("]", "v1.G"));
     }
 }

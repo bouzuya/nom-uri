@@ -101,9 +101,6 @@ pub fn ipv6address(i: Span) -> IResult<Span, Token> {
         )
             .map(|_| ()),
         (
-            // nom::multi::many_m_n(0, 2, (h16, nom::character::complete::char(':'))),
-            // nom::multi::count((h16, nom::character::complete::char(':')), 2),
-            // h16,
             |i| {
                 f(
                     i,
