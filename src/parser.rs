@@ -28,6 +28,7 @@ mod segment_nz_nc;
 mod sub_delims;
 mod unreserved;
 mod uri;
+mod userinfo;
 
 use nom_locate::LocatedSpan;
 
