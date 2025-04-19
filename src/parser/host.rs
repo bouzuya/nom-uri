@@ -1,7 +1,7 @@
 use nom::{IResult, Input as _, Offset as _, Parser};
 
 use super::{HasSpan, Span};
-use crate::parser::{ipv4address, reg_name};
+use crate::parser::{ip_literal, ipv4address, reg_name};
 
 #[derive(Debug, PartialEq)]
 pub struct Token<'a> {
@@ -20,7 +20,7 @@ impl<'a> HasSpan<'a> for Token<'a> {
 pub fn host(i: Span) -> IResult<Span, Token> {
     let start = i;
     let (i, _) = nom::branch::alt((
-        // TODO: IP-literal support
+        ip_literal.map(|_| ()),
         ipv4address.map(|_| ()),
         reg_name.map(|_| ()),
     ))
@@ -48,6 +48,32 @@ mod tests {
 
         ok(host, "192.168.0.1:80", (":80", "192.168.0.1"));
         ok(host, "192.168.0.1/path", ("/path", "192.168.0.1"));
+
+        ok(
+            host,
+            "[1111:2222:3333:4444:5555:6666:7777:8888]",
+            ("", "[1111:2222:3333:4444:5555:6666:7777:8888]"),
+        );
+        ok(
+            host,
+            "[1111:2222:3333:4444:5555:6666:127.0.0.1]",
+            ("", "[1111:2222:3333:4444:5555:6666:127.0.0.1]"),
+        );
+        ok(host, "[::1]", ("", "[::1]"));
+        ok(host, "[2001:db8::1]", ("", "[2001:db8::1]"));
+        ok(host, "[::ffff:192.0.2.128]", ("", "[::ffff:192.0.2.128]"));
+
+        ok(host, "[2001:db8::1]:8080", (":8080", "[2001:db8::1]"));
+        ok(host, "[2001:db8::1]/path", ("/path", "[2001:db8::1]"));
+
+        ok(host, "[v1.12345]", ("", "[v1.12345]"));
+        ok(
+            host,
+            "[vF.fe80000000000000022501fffef00003]",
+            ("", "[vF.fe80000000000000022501fffef00003]"),
+        );
+        ok(host, "[vA.!$&'()*+,;=:]", ("", "[vA.!$&'()*+,;=:]"));
+        ok(host, "[v1.12345]/path", ("/path", "[v1.12345]"));
 
         ok(host, "example.com", ("", "example.com"));
         ok(host, "sub.example.com", ("", "sub.example.com"));
